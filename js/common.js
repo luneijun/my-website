@@ -1,4 +1,5 @@
 $(function() {
+	getPageList();
 	let loading = {
 		show: function() {
 			$("body").append("<div class='main-loading'></div>");
