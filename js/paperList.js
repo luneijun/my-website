@@ -25,7 +25,6 @@ function getPageList(){
 }
 
 function showPage() {
-    console.log(currentPage)
     let showPage = paperList.slice((currentPage-1)*pageSize,currentPage*pageSize);
     $("#blogList").empty();
     $.each(showPage,function(i,paper){
