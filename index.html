@@ -24,37 +24,35 @@
 	  <div class="collapse navbar-collapse" id="navbarNav">
 		  <div class="mr-auto"></div>
 		<ul class="navbar-nav">
-		  <li class="nav-item active">
-			<a class="nav-link smooth-link" href="#hero">Home</a>
-		  </li>
-		  <li class="nav-item">
-			<a class="nav-link smooth-link" href="#features">Introduction</a>
-		  </li>
-		  <li class="nav-item">
-			<a class="nav-link smooth-link" href="#blog">Publication</a>
-		  </li>
-		  <li class="nav-item">
-			<a class="nav-link smooth-link" href="#project">Featured</a>
-		  </li>
-		</ul>
-		<form class="form-inline">
-			<a href="#contact" class="btn smooth-link align-middle btn-primary">Need Help?</a>
-		</form>
-	  </div>
-  </div>
-</nav>
-<section class="hero bg-overlay" id="hero" data-bg="img/home/nebula.jpg">
-	<div class="text">
-		<p class="lead">Future media technology and Computing</p>
-		<h1>Future<span class="bold"> media</span>, based on <span class="bold">artificial intelligence</span>.</h1>
-		<div class="cta">
-			<a href="#features" class="btn btn-primary smooth-link">Get Started</a>
-			<div class="link">						
-				<a href="#">Under the SZU License</a>
-			</div>
-		</div>
-	</div>
-</section>
+			<li class="nav-item active">
+              <a class="nav-link smooth-link" href="#hero">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link smooth-link" href="#features">Introduction</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link smooth-link" href="#blog">Publication</a>
+            </li>
+          </ul>
+          <form class="form-inline">
+              <a href="#contact" class="btn smooth-link align-middle btn-primary">Need Help?</a>
+          </form>
+        </div>
+    </div>
+  </nav>
+
+  <section class="hero bg-overlay" id="hero" data-bg="img/home/nebula.jpg">
+      <div class="text">
+          <p class="lead">Future media technology and Computing</p>
+          <h1>Future<span class="bold"> media</span>, based on <span class="bold">artificial intelligence</span>.</h1>
+          <div class="cta">
+              <a href="#features" class="btn btn-primary smooth-link">Get Started</a>
+              <div class="link">
+                  <a href="#">Under the SZU License</a>
+              </div>
+          </div>
+      </div>
+  </section>
 
 <section class="padding" id="features">
 	<div class="container">
@@ -146,8 +144,18 @@
 
 <section class="padding bg-grey" id="blog">
 	<div class="container">
-		<h2 class="section-title">Latest research results</h2>
-		<p class="section-lead text-muted">We will update our work dynamics from time to time for us to learn and communicate.</p>
+		<div class="row align-items-center mt-5">
+			<div class="col-12 col-md-6">
+				<h2>Latest research results</h2>
+				<p class="text-muted">We will update our work dynamics from time to time for us to learn and communicate.</p>
+			</div>
+			<div class="col-12 col-md-6">
+				<form class="subscribe" action="javascript:void(0);">
+					<input type="search" name="search" class="form-control" placeholder="Article title or author's name" id="searchInput">
+					<button id="searchBtn" class="btn btn-primary" >Search</button>
+				</form>
+			</div>
+		</div>
 		<div class="section-body">
 			<div class="row col-spacing" id="blogList">
 
@@ -158,23 +166,10 @@
 			<ul class="pagination justify-content-center" id="paginationId">
 			</ul>
 		</div>
-
-		<div class="row align-items-center mt-5">
-			<div class="col-12 col-md-6">
-				<h2>Don't miss our article</h2>
-				<p class="text-muted">Just enter your email then we will send an email about the latest articles</p>
-			</div>
-			<div class="col-12 col-md-6">
-				<form class="subscribe" action="#">
-					<input type="email" name="email" class="form-control" placeholder="Your email">
-					<button class="btn btn-primary">Subscribe</button>
-				</form>
-			</div>
-		</div>
 	</div>
 </section>
 
-<section class="bg-overlay padding" id="project" data-bg="img/projects.jpeg">
+<!--<section class="bg-overlay padding" id="project" data-bg="img/projects.jpeg">
 	<div class="container">
 		<div class="row align-items-center">
 			<div class="col-12 col-md-6">
@@ -203,7 +198,7 @@
 			</div>
 		</div>
 	</div>
-</section>
+</section>-->
 
 <section class="padding bg-grey" id="contact">
 	<div class="container">
@@ -246,7 +241,7 @@
 	</div>
 </section>
 
-<section class="callout">
+<!--<section class="callout">
 	<div class="container">
 		<div class="row align-items-center">
 			<div class="col-12 col-md-8 text">
@@ -259,7 +254,7 @@
 			</div>
 		</div>
 	</div>
-</section>
+</section>-->
 
 <footer>
 	<div class="container">

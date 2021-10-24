@@ -49,6 +49,10 @@ $(function() {
 		});
 	});
 
+	$("#searchBtn").click(function() {
+		search();
+	});
+
 	$("#contact-form").submit(function() {
 		let $this = $(this);
 		$.ajax({

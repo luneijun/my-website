@@ -15,6 +15,8 @@ let currentPage = 1;
 
 let paperList = [];
 
+let currentPaperList = [];
+
 function getPageList(loading){
     console.log('测试')
     $.ajax({
@@ -29,14 +31,43 @@ function getPageList(loading){
         success: function(data) {
             paperList = data;
             pageCount = (paperList.length%pageSize>0)?(Math.ceil(paperList.length/pageSize)):(Math.floor(paperList.length/pageSize));
+            currentPage = 1;
+            currentPaperList = paperList;
             showPage();
             initPagination();
         }
     });
 }
 
+function search() {
+    let searchValue = $("#searchInput").val();
+    if(typeof searchValue == "undefined" || searchValue == null || searchValue == "") {
+        if(JSON.stringify(currentPaperList) != JSON.stringify(paperList)) {
+            currentPaperList = paperList;
+            pageCount = (paperList.length%pageSize>0)?(Math.ceil(paperList.length/pageSize)):(Math.floor(paperList.length/pageSize));
+        } else {
+            return
+        }
+    }else {
+        let searchPaperList = paperList.filter(function (paper) {
+            return (paper.author.toLowerCase().indexOf(searchValue.toLowerCase()) != -1) || (paper.title.toLowerCase().indexOf(searchValue.toLowerCase()) != -1)
+        });
+        if(JSON.stringify(currentPaperList) != JSON.stringify(searchPaperList)) {
+            currentPage = 1;
+            pageCount = (searchPaperList.length%pageSize>0)?(Math.ceil(searchPaperList.length/pageSize)):(Math.floor(searchPaperList.length/pageSize));
+            console.log(pageCount)
+            currentPaperList = searchPaperList;
+        } else {
+            return
+        }
+    }
+    console.log(currentPaperList)
+    showPage();
+    initPagination();
+}
+
 function showPage() {
-    let showPage = paperList.slice((currentPage-1)*pageSize,currentPage*pageSize);
+    let showPage = currentPaperList.slice((currentPage-1)*pageSize,currentPage*pageSize);
     let previousPageCount = (currentPage-1)*pageSize
     $("#blogList").empty();
     $.each(showPage,function(i,paper){
@@ -61,9 +92,10 @@ function showPage() {
 }
 
 function initPagination() {
-    if(pageCount==0) return;
+    debugger
     let pagination = $("#paginationId");
     pagination.empty();
+    if(pageCount == 0) return;
     let previousLi = '<li class="page-item"><a class="page-link" href="javascript:void(0);" aria-label="Previous" data-toggle="selectPage" data-id="previousPage"><span aria-hidden="true">&laquo;</span></a></li>';
     pagination.append(previousLi);
     let firstLi = '<li class="page-item"><a class="page-link" href="javascript:void(0);" aria-label="first" data-toggle="selectPage" data-id="1"><span aria-hidden="true">1</span></a></li>';
@@ -76,6 +108,8 @@ function initPagination() {
             let half = (maxShowNum-1)/2
             let upperLimit = currentPage-half;
             let lowerLimit = currentPage+half;
+            let upperSurplus = false;
+            let lowerSurplus = false;
             if(pageCount<=maxShowNum+2) {
                 i = 2;
                 limit = pageCount-1;
@@ -83,20 +117,32 @@ function initPagination() {
                 if((upperLimit)<=1&&(lowerLimit)<pageCount) {
                     i = 2;
                     limit = maxShowNum +1;
+                    if(pageCount-lowerLimit>1) lowerSurplus = true;
                 }else if((upperLimit)>1&&(lowerLimit)>=pageCount) {
                     i = pageCount-maxShowNum;
                     limit = pageCount-1;
+                    if(upperLimit-1>1) upperSurplus = true;
                 }else if((upperLimit)<=1&&(lowerLimit)>=pageCount) {
                     i = 2;
                     limit = pageCount-1;
                 }else {
                     i = currentPage-half;
                     limit = currentPage+half;
+                    if(upperLimit-1>1) upperSurplus = true;
+                    if(pageCount-lowerLimit>1) lowerSurplus = true;
                 }
+            }
+            if(upperSurplus == true) {
+                let upperSurplusLi = '<li class="page-item"><a class="page-link" href="javascript:void(0);" aria-label="upperSurplus" data-toggle="selectPage" data-id="previousPage"><span aria-hidden="true">···</span></a></li>';
+                pagination.append(upperSurplusLi);
             }
             for(;i<=limit;i++){
                 let li = '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-toggle="selectPage" data-id="'+i+'">'+i+'</a></li>';
                 pagination.append(li);
+            }
+            if(lowerSurplus == true) {
+                let lowerSurplusLi = '<li class="page-item"><a class="page-link" href="javascript:void(0);" aria-label="lowerSurplus" data-toggle="selectPage" data-id="nextPage"><span aria-hidden="true">···</span></a></li>';
+                pagination.append(lowerSurplusLi);
             }
         }
         let lastLi = '<li class="page-item"><a class="page-link" href="javascript:void(0);" aria-label="last" data-toggle="selectPage" data-id="'+pageCount+'"><span aria-hidden="true">'+pageCount+'</span></a></li>';
@@ -104,6 +150,8 @@ function initPagination() {
     }
     let nextLi = '<li class="page-item"><a class="page-link" href="javascript:void(0);" aria-label="Next" data-toggle="selectPage" data-id="nextPage"><span aria-hidden="true">&raquo;</span></a></li>';
     pagination.append(nextLi);
+    let currentLi = '<li class="page-item disabled"> <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Page'+currentPage+'</a></li>';
+    pagination.append(currentLi);
     $("[data-toggle=selectPage]").click(function(e) {
         selectPage(e);
     })
