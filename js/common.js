@@ -1,5 +1,4 @@
 $(function() {
-	getPageList();
 	let loading = {
 		show: function() {
 			$("body").append("<div class='main-loading'></div>");
@@ -8,6 +7,7 @@ $(function() {
 			$(".main-loading").remove();
 		}
 	}
+	getPageList(loading);
 	$("body").easeScroll();
 
 	$("[data-bg]").each(function() {

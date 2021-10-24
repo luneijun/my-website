@@ -1,5 +1,5 @@
 //最大显示页码个数
-let maxShowNum = 4;
+let maxShowNum = 3;
 
 //总记录数
 let totalNum = 0;
@@ -15,28 +15,39 @@ let currentPage = 1;
 
 let paperList = [];
 
-function getPageList(){
-    $.getJSON("../mock/paperList.json", function (data,status) {
-        if( status==='success') paperList = data;
-        pageCount = (paperList.length%pageSize>0)?(paperList.length/pageSize+1):(paperList.length/pageSize);
-        showPage();
-        initPagination();
-    })
+function getPageList(loading){
+    $.ajax({
+        url: "../mock/paperList.json",
+        dataType: 'json',
+        beforeSend: function() {
+            loading.show();
+        },
+        complete: function() {
+            loading.hide();
+        },
+        success: function(data) {
+            paperList = data;
+            pageCount = (paperList.length%pageSize>0)?(Math.ceil(paperList.length/pageSize)):(Math.floor(paperList.length/pageSize));
+            showPage();
+            initPagination();
+        }
+    });
 }
 
 function showPage() {
     let showPage = paperList.slice((currentPage-1)*pageSize,currentPage*pageSize);
+    let previousPageCount = (currentPage-1)*pageSize
     $("#blogList").empty();
     $.each(showPage,function(i,paper){
         let card = '<div class="col-12 col-md-6 col-lg-4">';
         card += '<article class="card">';
         card += '<img class="card-img-top" src="'+paper.picture+'" alt="Article Image">';
         card += '<div class="card-body">';
-        card += '<div class="card-subtitle mb-2 text-muted">by <a href="#">'+paper.author+'</a> '+paper.date+'</div>';
+        card += '<div class="card-subtitle mb-2 text-muted"><a href="'+paper.github+'">GITHUB</a>&nbsp;&nbsp;<a href="'+paper.pdf+'">PDF</a>&nbsp;&nbsp;&nbsp;&nbsp;'+paper.date+'</div>';
         card += '<h4 class="card-title"><a href="#" data-toggle="read" data-id="1">'+paper.title+'</a></h4>';
         card += '<p class="card-text">'+paper.brief+'</p>';
         card += '<div class="text-right">';
-        card += '<a href="javascript:void(0);" class="card-more" data-toggle="learnMore" data-id="'+i+'">Read More <i class="ion-ios-arrow-right"></i></a>';
+        card += '<a href="javascript:void(0);" class="card-more" data-toggle="learnMore" data-id="'+(i+previousPageCount)+'">Read More <i class="ion-ios-arrow-right"></i></a>';
         card += '</div>';
         card += '</div>';
         card += '</article>';
@@ -49,13 +60,47 @@ function showPage() {
 }
 
 function initPagination() {
-    let limit = (pageCount<maxShowNum)?pageCount:maxShowNum;
+    if(pageCount==0) return;
+    debugger
     let pagination = $("#paginationId");
+    pagination.empty();
     let previousLi = '<li class="page-item"><a class="page-link" href="javascript:void(0);" aria-label="Previous" data-toggle="selectPage" data-id="previousPage"><span aria-hidden="true">&laquo;</span></a></li>';
     pagination.append(previousLi);
-    for(let i = 1;i<=limit;i++){
-        let li = '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-toggle="selectPage" data-id="'+i+'">'+i+'</a></li>';
-        pagination.append(li);
+    let firstLi = '<li class="page-item"><a class="page-link" href="javascript:void(0);" aria-label="first" data-toggle="selectPage" data-id="1"><span aria-hidden="true">1</span></a></li>';
+    pagination.append(firstLi);
+    if(pageCount!=1) {
+        if(pageCount>2)
+        {
+            let i;
+            let limit;
+            let half = (maxShowNum-1)/2
+            let upperLimit = currentPage-half;
+            let lowerLimit = currentPage+half;
+            if(pageCount<=maxShowNum+2) {
+                i = 2;
+                limit = pageCount-1;
+            }else {
+                if((upperLimit)<=1&&(lowerLimit)<pageCount) {
+                    i = 2;
+                    limit = maxShowNum +1;
+                }else if((upperLimit)>1&&(lowerLimit)>=pageCount) {
+                    i = pageCount-maxShowNum;
+                    limit = pageCount-1;
+                }else if((upperLimit)<=1&&(lowerLimit)>=pageCount) {
+                    i = 2;
+                    limit = pageCount-1;
+                }else {
+                    i = currentPage-half;
+                    limit = currentPage+half;
+                }
+            }
+            for(;i<=limit;i++){
+                let li = '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-toggle="selectPage" data-id="'+i+'">'+i+'</a></li>';
+                pagination.append(li);
+            }
+        }
+        let lastLi = '<li class="page-item"><a class="page-link" href="javascript:void(0);" aria-label="last" data-toggle="selectPage" data-id="'+pageCount+'"><span aria-hidden="true">'+pageCount+'</span></a></li>';
+        pagination.append(lastLi);
     }
     let nextLi = '<li class="page-item"><a class="page-link" href="javascript:void(0);" aria-label="Next" data-toggle="selectPage" data-id="nextPage"><span aria-hidden="true">&raquo;</span></a></li>';
     pagination.append(nextLi);
@@ -70,13 +115,16 @@ function selectPage(e) {
         if(currentPage>1) currentPage--;
         else return;
     } else if(newCurrentPage == "nextPage") {
-        if(currentPage<pageCount) currentPage++;
+        if(currentPage<pageCount) {
+            currentPage++;
+        }
         else return;
     } else if(newCurrentPage == currentPage) {
         return;
     } else{
-        currentPage = newCurrentPage;
+        currentPage = parseInt(newCurrentPage);
     }
+    initPagination();
     showPage();
 }
 
@@ -100,6 +148,12 @@ function learnMore(e) {
     $element += '</div>';
     $element += '<div class="meta">';
     $element += '	{author}';
+    $element += '</div>';
+    $element += '<div class="meta">';
+    $element += '	<a href="{github}">github</a>';
+    $element += '</div>';
+    $element += '<div class="meta">';
+    $element += '	<a href="{pdf}">pdf</a>';
     $element += '</div>';
     $element += '</div>';
     $element += '<figure class="article-picture"><img src="{picture}"></figure>';
