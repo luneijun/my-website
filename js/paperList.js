@@ -16,6 +16,7 @@ let currentPage = 1;
 let paperList = [];
 
 function getPageList(loading){
+    console.log('测试')
     $.ajax({
         url: "../mock/paperList.json",
         dataType: 'json',
