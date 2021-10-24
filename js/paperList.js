@@ -79,7 +79,7 @@ function showPage() {
         card += '<h4 class="card-title"><a href="#" data-toggle="read" data-id="1">'+paper.title+'</a></h4>';
         card += '<p class="card-text">'+paper.brief+'</p>';
         card += '<div class="text-right">';
-        card += '<a href="javascript:void(0);" class="card-more" data-toggle="learnMore" data-id="'+(i+previousPageCount)+'">Read More <i class="ion-ios-arrow-right"></i></a>';
+        card += '<a href="javascript:void(0);" class="card-more" data-toggle="learnMore" data-id="'+paper.id+'">Read More <i class="ion-ios-arrow-right"></i></a>';
         card += '</div>';
         card += '</div>';
         card += '</article>';
