@@ -62,7 +62,6 @@ function showPage() {
 
 function initPagination() {
     if(pageCount==0) return;
-    debugger
     let pagination = $("#paginationId");
     pagination.empty();
     let previousLi = '<li class="page-item"><a class="page-link" href="javascript:void(0);" aria-label="Previous" data-toggle="selectPage" data-id="previousPage"><span aria-hidden="true">&laquo;</span></a></li>';
