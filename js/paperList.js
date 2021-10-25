@@ -50,25 +50,23 @@ function search() {
         }
     }else {
         let searchPaperList = paperList.filter(function (paper) {
-            return (paper.author.toLowerCase().indexOf(searchValue.toLowerCase()) != -1) || (paper.title.toLowerCase().indexOf(searchValue.toLowerCase()) != -1)
+            return (paper.author.replace(/\s*/g,"").toLowerCase().indexOf(searchValue.replace(/\s*/g,"").toLowerCase()) != -1)
+                || (paper.title.replace(/\s*/g,"").toLowerCase().indexOf(searchValue.replace(/\s*/g,"").toLowerCase()) != -1)
         });
         if(JSON.stringify(currentPaperList) != JSON.stringify(searchPaperList)) {
-            currentPage = 1;
             pageCount = (searchPaperList.length%pageSize>0)?(Math.ceil(searchPaperList.length/pageSize)):(Math.floor(searchPaperList.length/pageSize));
-            console.log(pageCount)
             currentPaperList = searchPaperList;
         } else {
             return
         }
     }
-    console.log(currentPaperList)
+    currentPage = 1;
     showPage();
     initPagination();
 }
 
 function showPage() {
     let showPage = currentPaperList.slice((currentPage-1)*pageSize,currentPage*pageSize);
-    let previousPageCount = (currentPage-1)*pageSize
     $("#blogList").empty();
     $.each(showPage,function(i,paper){
         let card = '<div class="col-12 col-md-6 col-lg-4">';
@@ -172,6 +170,7 @@ function selectPage(e) {
     } else{
         currentPage = parseInt(newCurrentPage);
     }
+    $(window).scrollTop($('#Publication').offset().top);
     initPagination();
     showPage();
 }
